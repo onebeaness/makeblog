@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+/*
+ * 무채색만 쓴다. 다만 명세의 팔레트를 그대로 옮기지는 않았다.
+ * 명세의 메타 색 #8C8C8C 는 흰 배경에서 대비가 3.0:1 로,
+ * 본문 크기 텍스트의 WCAG AA 기준(4.5:1)에 못 미친다.
+ * 위계를 유지하면서 기준을 넘는 값으로 한 단계씩 조였다.
+ */
+:root {
+  --bg: #ffffff;
+  --surface: #f7f7f7;
+  --surface-2: #efefef;
+  --ink: #101010;        /* 21.0:1 */
+  --ink-soft: #4a4a4a;   /*  8.9:1 — 본문 */
+  --ink-faint: #6b6b6b;  /*  5.3:1 — 메타 */
+  --rule: #e0e0e0;
+  --rule-firm: #c4c4c4;
+  --invert-bg: #101010;
+  --invert-ink: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0d0d0d;
+    --surface: #161616;
+    --surface-2: #1f1f1f;
+    --ink: #f2f2f2;
+    --ink-soft: #b9b9b9;
+    --ink-faint: #949494;
+    --rule: #2a2a2a;
+    --rule-firm: #454545;
+    --invert-bg: #f2f2f2;
+    --invert-ink: #0d0d0d;
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+  --color-rule: var(--rule);
+  --color-rule-firm: var(--rule-firm);
+  --color-invert-bg: var(--invert-bg);
+  --color-invert-ink: var(--invert-ink);
+  --font-sans: var(--font-sans-kr);
+  --font-mono: var(--font-mono-code);
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+}
+
+/* 키보드 사용자에게 초점이 어디 있는지 확실히 보이게. 색 없이 윤곽선으로. */
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
