@@ -15,7 +15,20 @@ export async function updateSession(request: NextRequest) {
   // 환경 변수가 없으면 아무것도 하지 않는다. 안내 화면이 대신 뜬다.
   if (!hasSupabaseEnv) return NextResponse.next({ request });
 
-  let response = NextResponse.next({ request });
+  const response = NextResponse.next({ request });
+
+  try {
+    return await refresh(request, response);
+  } catch (error) {
+    // 토큰 갱신 실패는 "로그아웃 상태"로 떨어질 일이지, 사이트를 죽일 일이 아니다.
+    // proxy 는 모든 요청을 지나가므로, 여기서 예외가 새면 전 페이지가 500 이 된다.
+    console.error("[proxy] 세션 갱신 실패 — 로그아웃 상태로 계속 진행합니다:", error);
+    return response;
+  }
+}
+
+async function refresh(request: NextRequest, initial: NextResponse) {
+  let response = initial;
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

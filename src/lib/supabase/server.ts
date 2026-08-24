@@ -47,9 +47,16 @@ export async function createClient() {
 export async function getCurrentUser() {
   if (!hasSupabaseEnv) return null;
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  return user;
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    return user;
+  } catch (error) {
+    // 인증 서버에 못 닿았다고 화면 전체가 죽으면 안 된다.
+    // 확인할 수 없으면 "로그인하지 않음"으로 다룬다 — 안전한 쪽 기본값이다.
+    console.error("[auth] 사용자 확인 실패 — 로그아웃으로 간주합니다:", error);
+    return null;
+  }
 }
