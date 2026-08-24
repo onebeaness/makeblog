@@ -79,8 +79,16 @@ src/
     actions/
       posts.ts                 createPost · deletePost   ("use server")
       auth.ts                  signIn · signUp · signOut ("use server")
+  app/
+    chat/                      /chat — 리뷰 챗봇 (챕터 10)
+    api/index/route.ts         POST /api/index — 리뷰 100건을 벡터로
+    api/chat/route.ts          POST /api/chat  — 질문 → 답변 + 출처
+  lib/rag/                     임베딩 · Pinecone · LLM · 프롬프트 · LCEL 체인
+samples/reviews.csv            리뷰 100건
+eval/                          평가셋 15문항 + 측정 스크립트
 supabase/
   migrations/0001_posts.sql    테이블 + RLS 정책 + 권한
+  migrations/0002_reviews.sql  reviews 테이블 (조회 정책 하나만)
   seed.sql                     시드 글 2개
   tests/                       RLS 정책 검증 (수파베이스 없이 로컬 PG 로 돈다)
 docs/security-experiment.md    06절 보안 실험 절차
@@ -117,6 +125,24 @@ docs/security-experiment.md    06절 보안 실험 절차
 > RLS 로 막힌 삭제는 **조용히 0행**이 된다. 이걸 확인하지 않으면
 > 아무것도 지우지 않고 "삭제됐습니다"라고 말하는 UI 가 된다.
 > `deletePost` 가 `.select()` 로 영향 행 수를 세는 이유다.
+
+---
+
+## 리뷰 챗봇 (챕터 10)
+
+`/chat` 에 RAG 챗봇이 있다. 리뷰 100건을 근거로 답하고, 답변 아래에 근거 리뷰를
+유사도 점수와 함께 보여준다. 설정·구조·모델 비교는
+[`docs/chatbot.md`](./docs/chatbot.md).
+
+블로그와 결정적으로 다른 점 하나 — **서버 전용 비밀 키가 처음 생긴다.**
+수파베이스 anon key 는 RLS 가 지켜주므로 브라우저에 나가도 됐지만,
+`PINECONE_API_KEY` · `ANTHROPIC_API_KEY` 는 지켜줄 것이 없다.
+그래서 이 키를 만지는 코드는 전부 API Route 안에만 있다.
+
+```bash
+npm run dev     # /chat → [샘플 인덱싱] → 질문
+npm run eval    # 검색 품질 측정 (Recall@5 · MRR)
+```
 
 ---
 

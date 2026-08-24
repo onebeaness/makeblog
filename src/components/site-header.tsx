@@ -14,6 +14,12 @@ export default async function SiteHeader() {
         >
           Devlog
         </Link>
+        <Link
+          href="/chat"
+          className="font-mono text-xs tracking-wide text-ink-faint transition-colors hover:text-ink"
+        >
+          리뷰 챗봇
+        </Link>
         <div className="flex-1" />
         {user ? (
           <>
