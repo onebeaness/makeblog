@@ -25,7 +25,17 @@
 cp .env.local.example .env.local
 ```
 
-Project Settings → Data API 에서 URL 과 anon key 를 복사해 채운다.
+Project Settings → **API Keys** 에서 두 값을 복사해 채운다.
+
+- `NEXT_PUBLIC_SUPABASE_URL` — 반드시 `https://` 로 시작하는 전체 주소
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` — 공개용 키. 수파베이스가 키 체계를
+  바꾸는 중이라 두 형식이 있고 **둘 다 동작한다.**
+  `sb_publishable_...`(새 형식) 또는 `eyJhbGciOi...`(옛 Legacy anon public)
+
+두 값은 반드시 **같은 프로젝트**의 것이어야 한다. 섞이면
+`Invalid API key` 가 뜬다. `sb_secret_` / `service_role` 로 시작하는 키는
+절대 쓰지 않는다 — RLS 를 통째로 우회한다.
+
 `.env.local` 은 `.gitignore` 에 들어 있다.
 
 ### 3. 스키마 올리기
