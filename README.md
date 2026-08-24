@@ -62,6 +62,8 @@ npm run dev
 
 ## 구조
 
+그림으로 보려면 [`docs/architecture.md`](./docs/architecture.md) — 머메이드 다이어그램 5개.
+
 ```
 src/
   proxy.ts                     매 요청 토큰 갱신 + /write 접근 차단
